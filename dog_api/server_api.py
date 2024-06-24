@@ -8,14 +8,12 @@ from RPi_ultrasonic import ultrasonic
 
 manager = ConnectionManager()
 
-ultrasonic_sensor: ultrasonic
+
+ultrasonic_sensor = ultrasonic(trigger_pin=27, echo_pin=22, GPIO_Mode=GPIO.BCM)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # On startup
-    
-    # startup ultrasonic sensor
-    ultrasonic_sensor = ultrasonic(trigger_pin=27, echo_pin=22, GPIO_Mode=GPIO.BCM)
     asyncio.create_task(broadcast_sensor_data())
     yield
     # On death
