@@ -76,11 +76,15 @@ class ultrasonic:
         Union[float, None]: Meters the object is from the ultrasonic sensor
                             If unable to calculate distance None is returned
         """
+        self.send_pulse()
         time_traveled = self.recv_pulse()
         if not time_traveled:
             return None
         meters = self.SPEED_OF_SOUND*time_traveled/2
         return max(min(meters, self.max_range), self.min_range)
+
+    def __del__(self):
+        GPIO.cleanup([self.__trigger_pin, self.__echo_pin])
 
 if __name__ == "__main__":
     us = ultrasonic(trigger_pin=27, echo_pin=22, GPIO_Mode=GPIO.BCM)
