@@ -8,7 +8,6 @@ from RPi_ultrasonic import ultrasonic
 
 manager = ConnectionManager()
 
-
 ultrasonic_sensor = ultrasonic(trigger_pin=27, echo_pin=22, GPIO_Mode=GPIO.BCM)
 
 @asynccontextmanager
@@ -21,15 +20,15 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Dummy function to simulate reading data from an ultrasonic sensor
 async def read_ultrasonic_sensor():
-    import random
+    """
+    Function to reading data from an ultrasonic sensor
+    """
     while True:
-        await asyncio.sleep(1)  # Simulate delay between readings
-        distance = ultrasonic_sensor.get_distance()  # Simulate distance measurement
+        await asyncio.sleep(0.25)  # Delay between readings
+        distance = ultrasonic_sensor.get_distance()  # Distance measurement
         yield distance
 
-# WebSocket endpoint
 @app.websocket("/ultrasonic_sensor")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
@@ -40,8 +39,10 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
-# Background task to broadcast sensor data to all connected clients
 async def broadcast_sensor_data():
+    """
+    Background task to broadcast sensor data to all connected clients
+    """
     async for distance in read_ultrasonic_sensor():
         if manager.has_active_connections():
             await manager.broadcast(str(distance))
