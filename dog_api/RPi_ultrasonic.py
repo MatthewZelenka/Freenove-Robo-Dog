@@ -90,4 +90,4 @@ if __name__ == "__main__":
     us = ultrasonic(trigger_pin=27, echo_pin=22, GPIO_Mode=GPIO.BCM)
     dist = us.get_distance()
     if dist:
-        print(dist/100, "cm")
+        print(dist*100, "cm")
