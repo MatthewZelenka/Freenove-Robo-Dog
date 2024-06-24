@@ -56,13 +56,13 @@ class ultrasonic:
         GPIO_falling_edge = GPIO.HIGH if (falling_edge) else GPIO.LOW 
         t_pulse_start = time.time() # not actual pulse start time just reusing var to determin if it's good to start measuring
         # wait for pulse condition to start
-        while (GPIO.input(self.__echo_pin) == GPIO_falling_edge):
+        while (GPIO.input(self.__echo_pin) != GPIO_falling_edge):
             if ((time.time() - t_pulse_start) >= timeout):
                 return None
         
         # start as pulse can now be track for a falling or rising edge depending on how falling_edge var is set
         t_pulse_start = time.time()
-        while (GPIO.input(self.__echo_pin) != GPIO_falling_edge):
+        while (GPIO.input(self.__echo_pin) == GPIO_falling_edge):
             if ((time.time() - t_pulse_start) >= timeout):
                 return None
 
