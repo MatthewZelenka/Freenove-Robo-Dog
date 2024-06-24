@@ -52,4 +52,9 @@ async def broadcast_sensor_data():
 async def read_root():
     return {"message": "FastAPI WebSocket server is running"}
 
-# Run the server with: uvicorn main:app --reload
+if __name__ == "__main__":
+    """
+    Auto run server
+    """
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
