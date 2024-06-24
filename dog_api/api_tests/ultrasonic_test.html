@@ -60,7 +60,7 @@ function connect() {
         return;
     }
 
-    const websocketUrl = `ws://${ipAddress}:8000/ws`; // Adjust port as necessary
+    const websocketUrl = `ws://${ipAddress}:8000/ultrasonic_sensor`; // Adjust port as necessary
 
     ws = new WebSocket(websocketUrl);
 
@@ -75,7 +75,7 @@ function connect() {
 
     ws.onmessage = (event) => {
         console.log('Message received:', event.data);
-        dataElement.textContent = `Ultrasonic distance: ${event.data} cm`;
+        dataElement.textContent = `Ultrasonic distance: ${event.data*100} cm`;
     };
 
     ws.onclose = () => {

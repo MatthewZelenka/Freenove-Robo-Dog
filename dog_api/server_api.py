@@ -30,7 +30,7 @@ async def read_ultrasonic_sensor():
         yield distance
 
 # WebSocket endpoint
-@app.websocket("/ws")
+@app.websocket("/ultrasonic_sensor")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
