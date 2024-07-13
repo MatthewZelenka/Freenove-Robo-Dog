@@ -3,7 +3,6 @@ import io
 from fastapi import FastAPI, Response
 from contextlib import asynccontextmanager
 import asyncio
-from picamera import PiCamera
 
 from connection_manager import ConnectionManager
 import ultrasonic
@@ -35,7 +34,7 @@ Functions
 
 """
 Camera stream
-"""
+
 # initialize the PiCamera
 camera = PiCamera()
 
@@ -47,6 +46,7 @@ camera.framerate = 24
 stream = io.BytesIO()
 
 # Function to continuously capture frames from camera
+
 def capture_frames():
     global stream
     for _ in camera.capture_continuous(stream, format='jpeg', use_video_port=True):
@@ -60,15 +60,9 @@ def capture_frames():
 @app.get("/camera")
 async def video_feed():
     return Response(content=capture_frames(), media_type="multipart/x-mixed-replace; boundary=frame")
-
+"""
 # Optional endpoint to check if the server is running
 @app.get("/")
 async def read_root():
     return {"message": "FastAPI WebSocket server is running"}
 
-if __name__ == "__main__":
-    """
-    Auto run server
-    """
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
