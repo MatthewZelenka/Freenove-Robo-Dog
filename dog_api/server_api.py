@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import asyncio
 
 from .connection_manager import ConnectionManager
-import ultrasonic
+from . import ultrasonic
 
 """
 Setting up variables
