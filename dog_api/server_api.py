@@ -4,7 +4,7 @@ from fastapi import FastAPI, Response
 from contextlib import asynccontextmanager
 import asyncio
 
-from connection_manager import ConnectionManager
+from .connection_manager import ConnectionManager
 import ultrasonic
 
 """
