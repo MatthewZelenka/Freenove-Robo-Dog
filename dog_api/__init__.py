@@ -1,4 +1,4 @@
-from server_api import *
+from .server_api import *
 
 if __name__ == "__main__":
     """
