@@ -2,7 +2,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 import RPi.GPIO as GPIO
 import asyncio
 
-from RPi_ultrasonic import ultrasonic
+from .RPi_ultrasonic import ultrasonic
 from ..connection_manager import ConnectionManager
 
 router = APIRouter()
