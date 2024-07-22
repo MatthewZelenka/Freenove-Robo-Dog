@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultrasonic Sensor Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #data {
+            font-size: 2em;
+            color: #333;
+        }
+        .disconnected {
+            color: red;
+        }
+        .connected {
+            color: green;
+        }
+        button {
+            font-size: 1em;
+            padding: 10px 20px;
+            margin-top: 20px;
+        }
+        #disconnectButton {
+            display: none;
+        }
+        #ipInput {
+            margin-top: 20px;
+            padding: 8px;
+            font-size: 1em;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Battery SoC Data</h1>
+    <div id="data" class="disconnected">Disconnected</div>
+    <input type="text" id="ipInput" placeholder="Enter IP address">
+    <button id="connectButton">Connect</button>
+    <button id="disconnectButton">Disconnect</button>
+
+    <script>
+        const dataElement = document.getElementById('data');
+const connectButton = document.getElementById('connectButton');
+const disconnectButton = document.getElementById('disconnectButton');
+const ipInput = document.getElementById('ipInput');
+let ws;
+
+connectButton.addEventListener('click', connect);
+disconnectButton.addEventListener('click', disconnect);
+
+function connect() {
+    const ipAddress = ipInput.value.trim();
+    if (!ipAddress) {
+        alert('Please enter an IP address');
+        return;
+    }
+
+    const websocketUrl = `ws://${ipAddress}:8000/battery_SoC`; // Adjust port as necessary
+
+    ws = new WebSocket(websocketUrl);
+
+    ws.onopen = () => {
+        console.log('WebSocket connection established.');
+        dataElement.textContent = 'Connected, waiting for data...';
+        dataElement.className = 'connected';
+        connectButton.style.display = 'none';
+        disconnectButton.style.display = 'inline-block';
+        ipInput.disabled = true;
+    };
+
+    ws.onmessage = (event) => {
+        console.log('Message received:', event.data);
+        dataElement.textContent = `Battery percent: ${event.data} %`;
+    };
+
+    ws.onclose = () => {
+        console.log('WebSocket connection closed.');
+        dataElement.textContent = 'Disconnected';
+        dataElement.className = 'disconnected';
+        connectButton.style.display = 'inline-block';
+        disconnectButton.style.display = 'none';
+        ipInput.disabled = false;
+    };
+
+    ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        ws.close();
+    };
+}
+
+function disconnect() {
+    if (ws) {
+        console.log('Disconnecting WebSocket...');
+        ws.close();
+        ws = null;
+        dataElement.textContent = 'Disconnected';
+        dataElement.className = 'disconnected';
+        connectButton.style.display = 'inline-block';
+        disconnectButton.style.display = 'none';
+        ipInput.disabled = false;
+    }
+}
+    </script>
+</body>
+</html>
