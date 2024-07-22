@@ -6,6 +6,7 @@ import asyncio
 
 from .connection_manager import ConnectionManager
 from . import ultrasonic
+from . import analog_digital_converter
 
 """
 Setting up variables
@@ -19,7 +20,10 @@ Set up fastapi server
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # On startup
-    asyncio.create_task(ultrasonic.broadcast_sensor_data())
+    asyncio.create_task(ultrasonic.broadcast_ultrasonic_sensor_data())
+    
+    asyncio.create_task(analog_digital_converter.broadcast_battery_voltage_data())
+    asyncio.create_task(analog_digital_converter.broadcast_battery_SoC_data())
     yield
     # On death
     pass
@@ -28,6 +32,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(ultrasonic.router)
 
+app.include_router(analog_digital_converter.router)
 """
 Functions
 """
