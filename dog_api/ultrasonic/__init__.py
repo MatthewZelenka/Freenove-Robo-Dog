@@ -25,7 +25,7 @@ async def read_ultrasonic_sensor():
         yield distance
 
 @router.websocket("/ultrasonic_sensor")
-async def websocket_endpoint(websocket: WebSocket):
+async def ultrasonic_websocket_endpoint(websocket: WebSocket):
     await ultrasonic_manager.connect(websocket)
     try:
         while True:
@@ -34,7 +34,7 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         ultrasonic_manager.disconnect(websocket)
 
-async def broadcast_sensor_data():
+async def broadcast_ultrasonic_sensor_data():
     """
     Background task to broadcast sensor data to all connected clients
     """
