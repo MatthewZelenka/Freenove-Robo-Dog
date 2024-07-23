@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battery SoC Data</title>
+    <title>Camera Data</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,8 +37,10 @@
     </style>
 </head>
 <body>
-    <h1>Battery SoC Data</h1>
+    <h1>Camera Data</h1>
     <div id="data" class="disconnected">Disconnected</div>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <br/>
     <input type="text" id="ipInput" placeholder="Enter IP address">
     <button id="connectButton">Connect</button>
     <button id="disconnectButton">Disconnect</button>
@@ -48,6 +50,8 @@
         const connectButton = document.getElementById('connectButton');
         const disconnectButton = document.getElementById('disconnectButton');
         const ipInput = document.getElementById('ipInput');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
         let ws;
 
         connectButton.addEventListener('click', connect);
@@ -60,9 +64,10 @@
                 return;
             }
 
-            const websocketUrl = `ws://${ipAddress}:8000/battery_SoC`; // Adjust port as necessary
+            const websocketUrl = `ws://${ipAddress}:8000/camera`; // Adjust port as necessary
 
             ws = new WebSocket(websocketUrl);
+            ws.binaryType = "arraybuffer";
 
             ws.onopen = () => {
                 console.log('WebSocket connection established.');
@@ -75,7 +80,18 @@
 
             ws.onmessage = (event) => {
                 console.log('Message received:', event.data);
-                dataElement.textContent = `Battery percent: ${event.data} %`;
+                dataElement.textContent = `Camera:`;
+
+                const arrayBuffer = event.data;
+                const blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'image/jpeg' });
+                const url = URL.createObjectURL(blob);
+
+                const img = new Image();
+                img.src = url;
+                img.onload = function() {
+                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    URL.revokeObjectURL(url);
+                };
             };
 
             ws.onclose = () => {

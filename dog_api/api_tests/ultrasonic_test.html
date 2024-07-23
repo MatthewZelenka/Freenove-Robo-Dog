@@ -45,66 +45,66 @@
 
     <script>
         const dataElement = document.getElementById('data');
-const connectButton = document.getElementById('connectButton');
-const disconnectButton = document.getElementById('disconnectButton');
-const ipInput = document.getElementById('ipInput');
-let ws;
+        const connectButton = document.getElementById('connectButton');
+        const disconnectButton = document.getElementById('disconnectButton');
+        const ipInput = document.getElementById('ipInput');
+        let ws;
 
-connectButton.addEventListener('click', connect);
-disconnectButton.addEventListener('click', disconnect);
+        connectButton.addEventListener('click', connect);
+        disconnectButton.addEventListener('click', disconnect);
 
-function connect() {
-    const ipAddress = ipInput.value.trim();
-    if (!ipAddress) {
-        alert('Please enter an IP address');
-        return;
-    }
+        function connect() {
+            const ipAddress = ipInput.value.trim();
+            if (!ipAddress) {
+                alert('Please enter an IP address');
+                return;
+            }
 
-    const websocketUrl = `ws://${ipAddress}:8000/ultrasonic_sensor`; // Adjust port as necessary
+            const websocketUrl = `ws://${ipAddress}:8000/ultrasonic_sensor`; // Adjust port as necessary
 
-    ws = new WebSocket(websocketUrl);
+            ws = new WebSocket(websocketUrl);
 
-    ws.onopen = () => {
-        console.log('WebSocket connection established.');
-        dataElement.textContent = 'Connected, waiting for data...';
-        dataElement.className = 'connected';
-        connectButton.style.display = 'none';
-        disconnectButton.style.display = 'inline-block';
-        ipInput.disabled = true;
-    };
+            ws.onopen = () => {
+                console.log('WebSocket connection established.');
+                dataElement.textContent = 'Connected, waiting for data...';
+                dataElement.className = 'connected';
+                connectButton.style.display = 'none';
+                disconnectButton.style.display = 'inline-block';
+                ipInput.disabled = true;
+            };
 
-    ws.onmessage = (event) => {
-        console.log('Message received:', event.data);
-        dataElement.textContent = `Ultrasonic distance: ${event.data*100} cm`;
-    };
+            ws.onmessage = (event) => {
+                console.log('Message received:', event.data);
+                dataElement.textContent = `Ultrasonic distance: ${event.data*100} cm`;
+            };
 
-    ws.onclose = () => {
-        console.log('WebSocket connection closed.');
-        dataElement.textContent = 'Disconnected';
-        dataElement.className = 'disconnected';
-        connectButton.style.display = 'inline-block';
-        disconnectButton.style.display = 'none';
-        ipInput.disabled = false;
-    };
+            ws.onclose = () => {
+                console.log('WebSocket connection closed.');
+                dataElement.textContent = 'Disconnected';
+                dataElement.className = 'disconnected';
+                connectButton.style.display = 'inline-block';
+                disconnectButton.style.display = 'none';
+                ipInput.disabled = false;
+            };
 
-    ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        ws.close();
-    };
-}
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                ws.close();
+            };
+        }
 
-function disconnect() {
-    if (ws) {
-        console.log('Disconnecting WebSocket...');
-        ws.close();
-        ws = null;
-        dataElement.textContent = 'Disconnected';
-        dataElement.className = 'disconnected';
-        connectButton.style.display = 'inline-block';
-        disconnectButton.style.display = 'none';
-        ipInput.disabled = false;
-    }
-}
+        function disconnect() {
+            if (ws) {
+                console.log('Disconnecting WebSocket...');
+                ws.close();
+                ws = null;
+                dataElement.textContent = 'Disconnected';
+                dataElement.className = 'disconnected';
+                connectButton.style.display = 'inline-block';
+                disconnectButton.style.display = 'none';
+                ipInput.disabled = false;
+            }
+        }
     </script>
 </body>
 </html>
