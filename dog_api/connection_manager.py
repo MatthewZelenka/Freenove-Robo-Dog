@@ -18,5 +18,9 @@ class ConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
+    async def broadcast_bytes(self, message: bytes):
+        for connection in self.active_connections:
+            await connection.send_bytes(message)
+    
     def has_active_connections(self) -> bool:
         return len(self.active_connections) > 0

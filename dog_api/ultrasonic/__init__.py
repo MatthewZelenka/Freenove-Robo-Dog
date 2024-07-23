@@ -15,7 +15,7 @@ Ultrasonic sensor api
 
 ultrasonic_sensor = ultrasonic(trigger_pin=27, echo_pin=22, GPIO_Mode=GPIO.BCM)
 
-async def read_ultrasonic_sensor():
+async def read_ultrasonic_sensor(ultrasonic_sensor: ultrasonic):
     """
     Function to reading data from an ultrasonic sensor
     """
@@ -38,6 +38,12 @@ async def broadcast_ultrasonic_sensor_data():
     """
     Background task to broadcast sensor data to all connected clients
     """
-    async for distance in read_ultrasonic_sensor():
+    while True:
         if ultrasonic_manager.has_active_connections():
-            await ultrasonic_manager.broadcast(str(distance))
+            async for distance in read_ultrasonic_sensor(ultrasonic_sensor):
+                if ultrasonic_manager.has_active_connections():
+                    await ultrasonic_manager.broadcast(str(distance))
+                else:
+                    break
+        else:
+            await asyncio.sleep(1)  # Check for active connections periodically
