@@ -29,7 +29,7 @@ async def read_camera(cap:cv2.VideoCapture):
         frame = buffer.tobytes()
         yield frame
 
-@router.websocket("/ws")
+@router.websocket("/camera")
 async def camera_websocket_endpoint(websocket: WebSocket):
     await camera_manager.connect(websocket)
     try:
