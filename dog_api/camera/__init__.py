@@ -3,7 +3,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 import asyncio
 import cv2
 
-from connection_manager import ConnectionManager
+from ..connection_manager import ConnectionManager
 
 router = APIRouter()
 
