@@ -49,7 +49,7 @@ async def broadcast_battery_voltage_data():
     Background task to broadcast sensor data to all connected clients
     """
     while True:
-        if battery_SoC_manager.has_active_connections():
+        if battery_voltage_manager.has_active_connections():
             async for voltage in read_battery_voltage():
                 if battery_voltage_manager.has_active_connections():
                     await battery_voltage_manager.broadcast(str(voltage))
