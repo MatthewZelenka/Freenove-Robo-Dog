@@ -35,6 +35,8 @@ app.include_router(ultrasonic.router)
 
 app.include_router(analog_digital_converter.router)
 
+app.include_router(camera.router)
+
 # Optional endpoint to check if the server is running
 @app.get("/")
 async def read_root():
