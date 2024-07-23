@@ -1,5 +1,5 @@
-import asyncio
 from fastapi import WebSocket
+from fastapi.websockets import WebSocketDisconnect
 
 class ConnectionManager:
     def __init__(self):
@@ -15,21 +15,21 @@ class ConnectionManager:
     async def send_personal_message(self, message: str, websocket: WebSocket):
         try:
             await websocket.send_text(message)
-        except asyncio.exceptions.CancelledError:
+        except WebSocketDisconnect:
             pass
 
     async def broadcast(self, message: str):
         for connection in self.active_connections:
             try:
                 await connection.send_text(message)
-            except asyncio.exceptions.CancelledError:
+            except WebSocketDisconnect:
                 pass
 
     async def broadcast_bytes(self, message: bytes):
         for connection in self.active_connections:
             try:
                 await connection.send_bytes(message)
-            except asyncio.exceptions.CancelledError:
+            except WebSocketDisconnect:
                 pass
     
     def has_active_connections(self) -> bool:
